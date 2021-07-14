@@ -1,12 +1,13 @@
-name: GitHub Actions Demo
-on: [push]
+name: GitHub Actions - LW Inline Scanner
+on: push
 jobs:
   deployLW-Scanner:
   
 	runs-on: ubuntu-latest
 	
     steps:
-	
+	- uses: actions/checkout@v2
+    
 	# sample code from forum 
 	- name: Branch name
         id: branch_name
