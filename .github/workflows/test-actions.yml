@@ -3,39 +3,40 @@ on: push
 jobs:
   deployLW-Scanner:
     runs-on: ubuntu-latest
+
   
     steps:
-  - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
     
-  # sample code from forum 
-  - name: Branch name
-        id: branch_name
-        run: |
-          echo ::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}
-          echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
-          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
-      
-  - name: Build base image
-        run: |
-          echo $SOURCE_NAME
-          echo $SOURCE_BRANCH
-          echo $SOURCE_TAG
-        env:
-          SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
-          SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
-          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
-      
-  - name: download lacework proxy scanner
-       run: wget https://github.com/lacework/lacework-vulnerability-scanner/releases/download/v0.1.3/lw-scanner-darwin-amd64
-     
-  - name: Move and execute
-       run: |
-    chmod +x lw-scanner-darwin-amd64
-    mv lw-scanner-darwin-amd64 lw-scanner
-    lw-scanner version
-    lw-scanner config auth
-    ${{secrets.LWACCOUNTNAME}}
-    ${{secrets.URI}}
-   
-  - name: scan image
-       run: lw-scanner scan $SOURCE_NAME $SOURCE_TAG
+      # sample code from forum 
+      - name: Branch name
+            id: branch_name
+            run: |
+              echo ::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}
+              echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
+              echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+          
+      - name: Build base image
+            run: |
+              echo $SOURCE_NAME
+              echo $SOURCE_BRANCH
+              echo $SOURCE_TAG
+            env:
+              SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
+              SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
+              SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
+          
+      - name: download lacework proxy scanner
+           run: wget https://github.com/lacework/lacework-vulnerability-scanner/releases/download/v0.1.3/lw-scanner-darwin-amd64
+         
+      - name: Move and execute
+           run: |
+        chmod +x lw-scanner-darwin-amd64
+        mv lw-scanner-darwin-amd64 lw-scanner
+        lw-scanner version
+        lw-scanner config auth
+        ${{secrets.LWACCOUNTNAME}}
+        ${{secrets.URI}}
+       
+      - name: scan image
+           run: lw-scanner scan $SOURCE_NAME $SOURCE_TAG
